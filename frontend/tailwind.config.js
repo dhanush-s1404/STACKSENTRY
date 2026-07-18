@@ -1,0 +1,157 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          50: "#f0f4f8",
+          100: "#d9e2ec",
+          200: "#bcccdc",
+          300: "#9fb3c8",
+          400: "#829ab1",
+          500: "#2c5282",
+          600: "#2b4c7e",
+          700: "#1e3a5f",
+          800: "#1a3350",
+          900: "#102a43",
+        },
+        secondary: {
+          50: "#f7f8fa",
+          100: "#edf0f4",
+          200: "#dfe3ea",
+          300: "#c1c9d4",
+          400: "#a0aec0",
+          500: "#718096",
+          600: "#4a5568",
+          700: "#2d3748",
+          800: "#1a202c",
+          900: "#0d1117",
+        },
+        accent: {
+          50: "#e6f6ff",
+          100: "#bae3ff",
+          200: "#7cc4fa",
+          300: "#47a3f3",
+          400: "#2186eb",
+          500: "#0967d2",
+          600: "#0552b5",
+          700: "#03449e",
+          800: "#01337d",
+          900: "#002159",
+        },
+        success: {
+          50: "#e6f7ed",
+          100: "#b3ebd0",
+          200: "#80dea9",
+          300: "#4dd182",
+          400: "#26c765",
+          500: "#0fa953",
+          600: "#0d8b43",
+          700: "#0a6e36",
+          800: "#085229",
+          900: "#05361c",
+        },
+        warning: {
+          50: "#fef7e6",
+          100: "#fceabd",
+          200: "#f9d680",
+          300: "#f6c144",
+          400: "#f4b121",
+          500: "#e09900",
+          600: "#b87d00",
+          700: "#8f6100",
+          800: "#664500",
+          900: "#3d2a00",
+        },
+        danger: {
+          50: "#fde8e8",
+          100: "#f9c4c4",
+          200: "#f39797",
+          300: "#ed6b6b",
+          400: "#e74c4c",
+          500: "#c53030",
+          600: "#a42828",
+          700: "#822020",
+          800: "#611818",
+          900: "#401010",
+        },
+        slate: {
+          50: "#f8fafc",
+          100: "#f1f5f9",
+          200: "#e2e8f0",
+          300: "#cbd5e1",
+          400: "#94a3b8",
+          500: "#64748b",
+          600: "#475569",
+          700: "#334155",
+          800: "#1e293b",
+          900: "#0f172a",
+        },
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      },
+      borderRadius: {
+        xl: "0.75rem",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
+      },
+      boxShadow: {
+        xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        card: "0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06)",
+        "card-hover":
+          "0 10px 25px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.06)",
+        elevated:
+          "0 10px 40px -10px rgb(0 0 0 / 0.1), 0 4px 12px -2px rgb(0 0 0 / 0.06)",
+        sidebar:
+          "2px 0 8px -2px rgb(0 0 0 / 0.06), 4px 0 16px -4px rgb(0 0 0 / 0.04)",
+        glow: "0 0 20px -4px rgb(44 82 130 / 0.2)",
+        "glow-lg":
+          "0 0 40px -8px rgb(44 82 130 / 0.25), 0 0 80px -16px rgb(44 82 130 / 0.1)",
+      },
+      animation: {
+        fadeIn: "fadeIn 0.4s ease-out",
+        slideUp: "slideUp 0.4s ease-out",
+        slideDown: "slideDown 0.3s ease-out",
+        scaleIn: "scaleIn 0.2s ease-out",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        float: "float 6s ease-in-out infinite",
+        "slide-in-right": "slideInRight 0.3s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        slideDown: {
+          "0%": { opacity: "0", transform: "translateY(-16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        scaleIn: {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "mesh-gradient":
+          "radial-gradient(at 40% 20%, rgba(44, 82, 130, 0.12) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(9, 103, 210, 0.08) 0px, transparent 50%), radial-gradient(at 0% 50%, rgba(44, 82, 130, 0.06) 0px, transparent 50%)",
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
+};

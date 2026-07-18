@@ -1,0 +1,80 @@
+# ============================================================
+# StackSentry Technologies - Root .gitignore
+# ============================================================
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Build output
+dist/
+build/
+out/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+!frontend/.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.nyc_output/
+coverage/
+
+# Type checking
+.mypy_cache/
+.pyre/
+.pytype/
+.ruff_cache/
+
+# Logs
+*.log
+logs/
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+uploads_dev/*
+!uploads_dev/.gitkeep
+
+# Docker
+docker-compose.override.yml
+
+# Database
+*.db
+*.sqlite3
+
+# Backups
+backups/
+
+# Misc
+*.tsbuildinfo
+.eslintcache
+.sass-cache/
+*.tgz
+*.tar.gz

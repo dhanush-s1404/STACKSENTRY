@@ -1,0 +1,72 @@
+services:
+  db:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stacksentry_dev
+    ports:
+      - "5432:5432"
+    command: >
+      postgres
+        -c log_statement=all
+        -c log_duration=on
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: base
+    container_name: stacksentry-backend-dev
+    command: >
+      uvicorn app.main:app
+        --host 0.0.0.0
+        --port 8000
+        --reload
+        --reload-dir /app/app
+        --log-level debug
+        --access-log
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/stacksentry_dev
+      ENVIRONMENT: development
+      SECRET_KEY: dev-secret-key-change-in-production
+      REFRESH_SECRET_KEY: dev-refresh-secret-key-change-in-production
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000,http://localhost:8080
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    volumes:
+      - ./backend/app:/app/app
+      - uploads_dev:/app/uploads
+    profiles:
+      - dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: dev
+    container_name: stacksentry-frontend-dev
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_APP_NAME: StackSentry Technologies (Dev)
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/package.json:/app/package.json
+    profiles:
+      - dev
+
+  nginx:
+    ports:
+      - "80:80"
+    profiles:
+      - dev
+
+volumes:
+  uploads_dev:
+    driver: local
