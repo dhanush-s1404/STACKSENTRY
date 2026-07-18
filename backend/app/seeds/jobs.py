@@ -539,7 +539,7 @@ JOBS = [
             "Hybrid work model\n"
             "AWS certification sponsorship and recertification support\n"
             "Annual learning and conference budget\n"
-            "Flexible PTO and public holidays\n            "Latest hardware and home office setup\n"
+            "Flexible PTO and public holidays\n"           "Latest hardware and home office setup\n"
             "Provident fund, gratuity, and statutory benefits"
         ),
         "salary_min": 1000000,
