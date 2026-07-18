@@ -12,6 +12,7 @@ from app.api.v1.router import api_router
 from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
 from app.middleware.audit import AuditMiddleware
 from app.seeds.admin import seed_admin_user
+from app.seeds.jobs import seed_jobs
 
 
 @asynccontextmanager
@@ -25,6 +26,7 @@ async def lifespan(app: FastAPI):
 
     async with async_session_factory() as session:
         await seed_admin_user(session)
+        await seed_jobs(session)
         await session.commit()
 
     yield
