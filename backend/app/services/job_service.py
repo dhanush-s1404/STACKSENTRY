@@ -1,10 +1,8 @@
-import math
 import uuid
 from typing import Optional
 
-from sqlalchemy import select, func, and_, or_
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.models.job import Job
 
@@ -15,6 +13,7 @@ class JobService:
     @staticmethod
     async def create_job(db: AsyncSession, data: dict) -> Job:
         """Create a new job posting."""
+
         job = Job(
             title=data["title"],
             description=data["description"],
@@ -32,19 +31,27 @@ class JobService:
             application_deadline=data.get("application_deadline"),
             positions_available=data.get("positions_available", 1),
         )
+
         db.add(job)
         await db.flush()
+
         return job
 
+
     @staticmethod
-    async def get_job(db: AsyncSession, job_id: uuid.UUID) -> Optional[Job]:
-        """Get job by ID with application count."""
+    async def get_job(
+        db: AsyncSession,
+        job_id: uuid.UUID
+    ) -> Optional[Job]:
+        """Get job by ID."""
+
         result = await db.execute(
             select(Job)
-            .options(selectinload(Job.applications))
             .where(Job.id == job_id)
         )
+
         return result.scalar_one_or_none()
+
 
     @staticmethod
     async def list_jobs(
@@ -60,13 +67,18 @@ class JobService:
         department: Optional[str] = None,
     ) -> tuple[list[Job], int]:
         """List jobs with filters and pagination."""
+
         query = select(Job)
 
         if is_active is not None:
-            query = query.where(Job.is_active == is_active)
+            query = query.where(
+                Job.is_active == is_active
+            )
+
 
         if search:
             search_pattern = f"%{search}%"
+
             query = query.where(
                 or_(
                     Job.title.ilike(search_pattern),
@@ -76,77 +88,175 @@ class JobService:
                 )
             )
 
+
         if job_type:
-            query = query.where(Job.job_type == job_type)
+            query = query.where(
+                Job.job_type == job_type
+            )
+
 
         if experience_level:
-            query = query.where(Job.experience_level == experience_level)
+            query = query.where(
+                Job.experience_level == experience_level
+            )
+
 
         if location:
-            query = query.where(Job.location.ilike(f"%{location}%"))
+            query = query.where(
+                Job.location.ilike(f"%{location}%")
+            )
+
 
         if is_remote is not None:
-            query = query.where(Job.is_remote == is_remote)
+            query = query.where(
+                Job.is_remote == is_remote
+            )
+
 
         if department:
-            query = query.where(Job.department.ilike(f"%{department}%"))
+            query = query.where(
+                Job.department.ilike(f"%{department}%")
+            )
 
-        count_query = select(func.count()).select_from(query.subquery())
-        total = (await db.execute(count_query)).scalar() or 0
 
-        query = query.order_by(Job.created_at.desc())
-        query = query.offset((page - 1) * per_page).limit(per_page)
+        # Total count
+        count_query = select(
+            func.count()
+        ).select_from(
+            query.subquery()
+        )
+
+        total = (
+            await db.execute(count_query)
+        ).scalar() or 0
+
+
+        # Pagination
+        query = (
+            query
+            .order_by(Job.created_at.desc())
+            .offset((page - 1) * per_page)
+            .limit(per_page)
+        )
+
 
         result = await db.execute(query)
-        jobs = list(result.scalars().all())
+
+        jobs = list(
+            result.scalars().all()
+        )
+
 
         return jobs, total
 
+
+
     @staticmethod
     async def update_job(
-        db: AsyncSession, job_id: uuid.UUID, data: dict
+        db: AsyncSession,
+        job_id: uuid.UUID,
+        data: dict
     ) -> Optional[Job]:
         """Update a job posting."""
-        job = await db.get(Job, job_id)
+
+
+        job = await db.get(
+            Job,
+            job_id
+        )
+
+
         if not job:
             return None
 
+
         for key, value in data.items():
+
             if value is not None and hasattr(job, key):
-                setattr(job, key, value)
+                setattr(
+                    job,
+                    key,
+                    value
+                )
+
 
         await db.flush()
+
         return job
 
+
+
     @staticmethod
-    async def delete_job(db: AsyncSession, job_id: uuid.UUID) -> bool:
+    async def delete_job(
+        db: AsyncSession,
+        job_id: uuid.UUID
+    ) -> bool:
         """Soft delete a job posting."""
-        job = await db.get(Job, job_id)
+
+
+        job = await db.get(
+            Job,
+            job_id
+        )
+
+
         if not job:
             return False
 
+
         job.is_active = False
+
         await db.flush()
+
         return True
 
+
+
     @staticmethod
-    async def get_job_stats(db: AsyncSession) -> dict:
+    async def get_job_stats(
+        db: AsyncSession
+    ) -> dict:
         """Get job statistics."""
-        total_jobs = (await db.execute(select(func.count(Job.id)))).scalar() or 0
-        active_jobs = (
+
+
+        total_jobs = (
             await db.execute(
-                select(func.count(Job.id)).where(Job.is_active == True)
+                select(func.count(Job.id))
             )
         ).scalar() or 0
 
+
+
+        active_jobs = (
+            await db.execute(
+                select(func.count(Job.id))
+                .where(Job.is_active == True)
+            )
+        ).scalar() or 0
+
+
+
         job_type_counts = {}
-        for jtype in ["full_time", "part_time", "contract", "internship"]:
+
+
+        for jtype in [
+            "full_time",
+            "part_time",
+            "contract",
+            "internship"
+        ]:
+
             count = (
                 await db.execute(
-                    select(func.count(Job.id)).where(Job.job_type == jtype)
+                    select(func.count(Job.id))
+                    .where(Job.job_type == jtype)
                 )
             ).scalar() or 0
+
+
             job_type_counts[jtype] = count
+
+
 
         return {
             "total_jobs": total_jobs,
