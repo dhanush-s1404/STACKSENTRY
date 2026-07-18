@@ -198,10 +198,10 @@ export default function HRAnalytics() {
 
   const metrics = useMemo(() => {
     return [
-      { label: "Total Applications", value: stats?.totalApplications ?? appsData?.total ?? 0, icon: BarChart3, color: "bg-blue-500" },
-      { label: "Pending Reviews", value: stats?.pendingReviews ?? 0, icon: Clock, color: "bg-amber-500" },
-      { label: "Interviews Scheduled", value: stats?.interviewsScheduled ?? 0, icon: TrendingUp, color: "bg-purple-500" },
-      { label: "Offers Sent", value: stats?.offersSent ?? 0, icon: Users, color: "bg-success-500" },
+      { label: "Total Applications", value: stats?.applications?.total_applications ?? appsData?.total ?? 0, icon: BarChart3, color: "bg-blue-500" },
+      { label: "Pending Reviews", value: (stats?.applications?.status_counts?.["under_review"] ?? 0) + (stats?.applications?.status_counts?.["applied"] ?? 0), icon: Clock, color: "bg-amber-500" },
+      { label: "Interviews Scheduled", value: stats?.applications?.status_counts?.["interview_scheduled"] ?? 0, icon: TrendingUp, color: "bg-purple-500" },
+      { label: "Offers Sent", value: stats?.applications?.status_counts?.["offer_sent"] ?? 0, icon: Users, color: "bg-success-500" },
     ];
   }, [stats, appsData]);
 

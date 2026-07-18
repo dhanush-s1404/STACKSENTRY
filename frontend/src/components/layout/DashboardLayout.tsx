@@ -182,7 +182,7 @@ export default function DashboardLayout() {
               </button>
 
               <Link
-                to="/candidate/notifications"
+                to={user?.role === "candidate" ? "/candidate/notifications" : "/hr/settings"}
                 className="relative p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
               >
                 <Bell className="h-5 w-5 text-slate-600 dark:text-slate-400" />

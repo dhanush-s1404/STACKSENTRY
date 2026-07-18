@@ -154,32 +154,32 @@ export default function JobDetails() {
                   </p>
                 </Card>
 
-                {job.responsibilities.length > 0 && (
+                {job.responsibilities && job.responsibilities.trim().length > 0 && (
                   <Card glass hover={false}>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                       Responsibilities
                     </h2>
                     <ul className="space-y-2">
-                      {job.responsibilities.map((r: string, i: number) => (
+                      {job.responsibilities.split("\n").filter((r: string) => r.trim()).map((r: string, i: number) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
                           <CheckCircle className="h-4 w-4 text-primary-500 mt-0.5 flex-shrink-0" />
-                          {r}
+                          {r.trim()}
                         </li>
                       ))}
                     </ul>
                   </Card>
                 )}
 
-                {job.requirements.length > 0 && (
+                {job.requirements && job.requirements.trim().length > 0 && (
                   <Card glass hover={false}>
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                       Requirements
                     </h2>
                     <ul className="space-y-2">
-                      {job.requirements.map((r: string, i: number) => (
+                      {job.requirements.split("\n").filter((r: string) => r.trim()).map((r: string, i: number) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
                           <CheckCircle className="h-4 w-4 text-success-500 mt-0.5 flex-shrink-0" />
-                          {r}
+                          {r.trim()}
                         </li>
                       ))}
                     </ul>
@@ -188,14 +188,14 @@ export default function JobDetails() {
               </div>
 
               <div className="space-y-6">
-                {job.benefits.length > 0 && (
+                {job.benefits && job.benefits.trim().length > 0 && (
                   <Card glass hover={false}>
                     <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Benefits</h3>
                     <ul className="space-y-2">
-                      {job.benefits.map((b: string, i: number) => (
+                      {job.benefits.split("\n").filter((b: string) => b.trim()).map((b: string, i: number) => (
                         <li key={i} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                           <CheckCircle className="h-3.5 w-3.5 text-primary-500 flex-shrink-0" />
-                          {b}
+                          {b.trim()}
                         </li>
                       ))}
                     </ul>

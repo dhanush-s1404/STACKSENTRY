@@ -5,7 +5,7 @@ export interface PaginatedApplications {
   items: Application[];
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
   pages: number;
 }
 
@@ -19,8 +19,20 @@ export async function getApplication(id: string) {
   return res.data;
 }
 
-export async function createApplication(data: FormData) {
-  const res = await api.post<Application>("/applications", data, {
+export async function createApplication(data: {
+  job_id: string;
+  cover_letter?: string;
+  expected_salary?: string;
+  preferred_work_mode?: string;
+}) {
+  const res = await api.post<Application>("/applications", data);
+  return res.data;
+}
+
+export async function uploadApplicationResume(file: File) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await api.post<{ id: string; filename: string }>("/files/upload?upload_type=resume", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return res.data;

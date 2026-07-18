@@ -109,9 +109,9 @@ export interface Job {
   salaryMin?: number;
   salaryMax?: number;
   salaryCurrency: string;
-  requirements: string[];
-  responsibilities: string[];
-  benefits: string[];
+  requirements: string;
+  responsibilities: string;
+  benefits: string;
   applicationDeadline?: string;
   positionsAvailable: number;
   positionsFilled: number;
@@ -144,10 +144,10 @@ export interface Application {
 export interface FileItem {
   id: string;
   filename: string;
-  originalName: string;
+  originalFilename: string;
+  fileSize: number;
   mimeType: string;
-  size: number;
-  url: string;
+  uploadType: string;
   createdAt: string;
 }
 
@@ -184,7 +184,7 @@ export interface PaginatedResponse<T> {
   items: T[];
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
   pages: number;
 }
 
@@ -212,6 +212,22 @@ export interface DashboardStats {
   status_counts: Record<string, number>;
   active_jobs: number;
   recent_applications: number;
+  users?: {
+    total: number;
+    candidates: number;
+    hr: number;
+    admins: number;
+    active: number;
+  };
+  jobs?: {
+    total_jobs: number;
+    active_jobs: number;
+    inactive_jobs: number;
+    job_type_counts: Record<string, number>;
+  };
+  interviews?: {
+    total: number;
+  };
 }
 
 export interface ContactFormData {

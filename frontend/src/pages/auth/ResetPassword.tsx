@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lock, Shield, ArrowRight, Check } from "lucide-react";
 import Input from "@/components/ui/Input";
@@ -8,8 +8,7 @@ import { showToast } from "@/components/ui/Toast";
 import api from "@/lib/api";
 
 export default function ResetPassword() {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token") || "";
+  const { token } = useParams();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);

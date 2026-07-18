@@ -5,7 +5,7 @@ export interface PaginatedJobs {
   items: Job[];
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
   pages: number;
 }
 

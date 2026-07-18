@@ -162,11 +162,11 @@ export default function HRDashboard() {
   }, [allAppsData]);
 
   const statCards = [
-    { label: "Total Applications", value: stats?.totalApplications ?? 0, icon: Users, color: "bg-blue-500" },
-    { label: "Pending Reviews", value: stats?.pendingReviews ?? 0, icon: Clock, color: "bg-amber-500" },
-    { label: "Interviews Scheduled", value: stats?.interviewsScheduled ?? 0, icon: Calendar, color: "bg-purple-500" },
-    { label: "Offers Sent", value: stats?.offersSent ?? 0, icon: Send, color: "bg-success-500" },
-    { label: "Positions Filled", value: stats?.positionsFilled ?? 0, icon: CheckCircle, color: "bg-emerald-500" },
+    { label: "Total Applications", value: stats?.applications?.total_applications ?? 0, icon: Users, color: "bg-blue-500" },
+    { label: "Pending Reviews", value: (stats?.applications?.status_counts?.["under_review"] ?? 0) + (stats?.applications?.status_counts?.["applied"] ?? 0), icon: Clock, color: "bg-amber-500" },
+    { label: "Interviews Scheduled", value: stats?.applications?.status_counts?.["interview_scheduled"] ?? 0, icon: Calendar, color: "bg-purple-500" },
+    { label: "Offers Sent", value: stats?.applications?.status_counts?.["offer_sent"] ?? 0, icon: Send, color: "bg-success-500" },
+    { label: "Positions Filled", value: stats?.applications?.status_counts?.["hired"] ?? 0, icon: CheckCircle, color: "bg-emerald-500" },
   ];
 
   const recentApplicants = recentAppsData?.items ?? [];

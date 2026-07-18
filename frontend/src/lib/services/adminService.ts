@@ -1,28 +1,44 @@
 import api from "@/lib/api";
 
-export interface DashboardStats {
-  totalApplications: number;
-  pendingReviews: number;
-  interviewsScheduled: number;
-  offersSent: number;
-  positionsFilled: number;
-  totalJobs: number;
-  totalUsers: number;
+export interface AdminDashboardResponse {
+  users: {
+    total: number;
+    candidates: number;
+    hr: number;
+    admins: number;
+    active: number;
+  };
+  applications: {
+    total_applications: number;
+    status_counts: Record<string, number>;
+    active_jobs: number;
+    recent_applications: number;
+  };
+  jobs: {
+    total_jobs: number;
+    active_jobs: number;
+    inactive_jobs: number;
+    job_type_counts: Record<string, number>;
+  };
+  interviews: {
+    total: number;
+  };
 }
 
-export interface AnalyticsData {
-  funnel: { stage: string; count: number }[];
-  monthlyTrends: { month: string; applications: number; hires: number; interviews: number }[];
-  sourceDistribution: { name: string; value: number }[];
-  departmentBreakdown: { dept: string; applications: number; hires: number }[];
+export interface AdminAnalyticsResponse {
+  total_applications: number;
+  total_jobs: number;
+  total_users: number;
+  status_breakdown: Record<string, number>;
+  conversion_rate: number;
 }
 
 export async function getHRDashboardStats() {
-  const res = await api.get<DashboardStats>("/admin/dashboard");
+  const res = await api.get<AdminDashboardResponse>("/admin/dashboard");
   return res.data;
 }
 
 export async function getAnalytics(params?: { date_range?: string }) {
-  const res = await api.get<AnalyticsData>("/admin/analytics", { params });
+  const res = await api.get<AdminAnalyticsResponse>("/admin/analytics", { params });
   return res.data;
 }

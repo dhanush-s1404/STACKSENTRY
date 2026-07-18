@@ -29,7 +29,7 @@ import ProgressBar from "@/components/ui/ProgressBar";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/components/ui/Toast";
 import { getJob } from "@/lib/services/jobsService";
-import { createApplication } from "@/lib/services/applicationsService";
+import { createApplication, uploadApplicationResume } from "@/lib/services/applicationsService";
 
 const personalSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -118,7 +118,19 @@ export default function Apply() {
   });
 
   const submitMutation = useMutation({
-    mutationFn: (formData: FormData) => createApplication(formData),
+    mutationFn: async (payload: {
+      job_id: string;
+      cover_letter?: string;
+      expected_salary?: string;
+      preferred_work_mode?: string;
+      resume?: File;
+    }) => {
+      if (payload.resume) {
+        await uploadApplicationResume(payload.resume);
+      }
+      const { resume, ...applicationData } = payload;
+      return createApplication(applicationData);
+    },
     onSuccess: (data) => {
       showToast.success("Application submitted successfully!");
       setTrackingNumber(data.trackingNumber || "SS-" + Date.now().toString(36).toUpperCase());
@@ -155,42 +167,16 @@ export default function Apply() {
       return;
     }
 
-    const fd = new FormData();
-    if (jobId) fd.append("jobId", jobId);
-
-    const p = personalForm.getValues();
-    fd.append("fullName", p.fullName);
-    fd.append("email", p.email);
-    fd.append("phone", p.phone);
-    if (p.dateOfBirth) fd.append("dateOfBirth", p.dateOfBirth);
-    if (p.gender) fd.append("gender", p.gender);
-
-    const a = addressForm.getValues();
-    fd.append("address", a.address);
-    fd.append("state", a.state);
-    fd.append("country", a.country);
-
-    fd.append("education", JSON.stringify(educations));
-
-    const ex = experienceForm.getValues();
-    fd.append("skills", ex.skills);
-    if (ex.yearsOfExperience) fd.append("yearsOfExperience", ex.yearsOfExperience);
-    if (ex.achievements) fd.append("achievements", ex.achievements);
-    if (ex.internships) fd.append("internships", ex.internships);
-
     const l = linksForm.getValues();
-    if (l.githubUrl) fd.append("githubUrl", l.githubUrl);
-    if (l.linkedinUrl) fd.append("linkedinUrl", l.linkedinUrl);
-    if (l.portfolioUrl) fd.append("portfolioUrl", l.portfolioUrl);
-    if (l.expectedSalary) fd.append("expectedSalary", l.expectedSalary);
-    if (l.preferredWorkMode) fd.append("preferredWorkMode", l.preferredWorkMode);
-
     const cl = coverLetterForm.getValues();
-    fd.append("coverLetter", cl.coverLetter);
 
-    fd.append("resume", resume);
-
-    submitMutation.mutate(fd);
+    submitMutation.mutate({
+      job_id: jobId!,
+      cover_letter: cl.coverLetter,
+      expected_salary: l.expectedSalary || undefined,
+      preferred_work_mode: l.preferredWorkMode || undefined,
+      resume,
+    });
   };
 
   if (submitted) {
@@ -544,7 +530,7 @@ export default function Apply() {
                             {...linksForm.register("preferredWorkMode")}
                             options={[
                               { value: "remote", label: "Remote" },
-                              { value: "on_site", label: "On-site" },
+                              { value: "onsite", label: "On-site" },
                               { value: "hybrid", label: "Hybrid" },
                             ]}
                           />

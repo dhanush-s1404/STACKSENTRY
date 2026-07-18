@@ -5,7 +5,7 @@ export interface PaginatedNotifications {
   items: Notification[];
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
   pages: number;
 }
 
@@ -15,7 +15,7 @@ export async function getNotifications(params?: { is_read?: boolean; page?: numb
 }
 
 export async function markNotificationRead(id: string) {
-  const res = await api.put<Notification>(`/notifications/${id}`, { is_read: true });
+  const res = await api.put<Notification>(`/notifications/${id}/read`);
   return res.data;
 }
 

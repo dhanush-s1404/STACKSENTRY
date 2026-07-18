@@ -5,7 +5,7 @@ export interface PaginatedInterviews {
   items: Interview[];
   total: number;
   page: number;
-  per_page: number;
+  perPage: number;
   pages: number;
 }
 
