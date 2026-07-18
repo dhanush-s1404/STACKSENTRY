@@ -1,7 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
+import ssl
 
 from app.config import settings
+
+# Create SSL context for Neon
+ssl_context = ssl.create_default_context()
 
 engine = create_async_engine(
     settings.DATABASE_URL,
@@ -9,6 +13,7 @@ engine = create_async_engine(
     pool_pre_ping=True,
     pool_size=20,
     max_overflow=10,
+    connect_args={"ssl": ssl_context},
 )
 
 async_session_factory = async_sessionmaker(
@@ -19,12 +24,10 @@ async_session_factory = async_sessionmaker(
 
 
 class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy models."""
     pass
 
 
-async def get_db() -> AsyncSession:  # type: ignore[misc]
-    """Dependency that provides a database session."""
+async def get_db():
     async with async_session_factory() as session:
         try:
             yield session
