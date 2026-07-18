@@ -79,16 +79,26 @@ export default function Careers() {
   const [department, setDepartment] = useState("All");
   const [jobType, setJobType] = useState("All");
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["jobs", { search, department, type: jobType }],
-    queryFn: () =>
-      getJobs({
-        search: search || undefined,
-        department: department === "All" ? undefined : department,
-        type: jobType === "All" ? undefined : jobType,
-        per_page: 50,
-      }),
-  });
+const { data, isLoading, isError } = useQuery({
+  queryKey: ["jobs", { search, department, jobType }],
+
+  queryFn: () =>
+    getJobs({
+      search: search || undefined,
+
+      department:
+        department === "All"
+          ? undefined
+          : department,
+
+      job_type:
+        jobType === "All"
+          ? undefined
+          : jobType,
+
+      per_page: 50,
+    }),
+});
 
   const jobs = data?.items ?? [];
   const total = data?.total ?? 0;
