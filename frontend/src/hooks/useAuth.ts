@@ -7,7 +7,7 @@ export function useAuth() {
 
   const loginUser = async (data: LoginRequest) => {
     const res = await api.post<TokenResponse>("/auth/login", data);
-    login(res.data.user, res.data.access_token, res.data.refresh_token);
+    login(res.data.user, res.data.accessToken, res.data.refreshToken);
     return res.data;
   };
 
