@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: stacksentry-backend
+    runtime: python
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: REFRESH_SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: '["https://stacksentry-frontend.onrender.com"]'
+      - key: FRONTEND_URL
+        value: https://stacksentry-frontend.onrender.com
+      - key: PYTHON_VERSION
+        value: "3.11"

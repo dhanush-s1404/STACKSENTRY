@@ -94,6 +94,23 @@ class InterviewService:
         return interview
 
     @staticmethod
+    async def get_interview(
+        db: AsyncSession, interview_id: uuid.UUID
+    ) -> Optional[Interview]:
+        """Get a single interview by ID with relationships."""
+        result = await db.execute(
+            select(Interview)
+            .options(
+                selectinload(Interview.application)
+                .selectinload(Application.applicant)
+                .selectinload(ApplicantProfile.user),
+                selectinload(Interview.interviewer),
+            )
+            .where(Interview.id == interview_id)
+        )
+        return result.scalar_one_or_none()
+
+    @staticmethod
     async def get_interviews(
         db: AsyncSession,
         interviewer_id: Optional[uuid.UUID] = None,

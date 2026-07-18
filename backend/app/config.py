@@ -1,4 +1,3 @@
-import secrets
 from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -16,13 +15,14 @@ class Settings(BaseSettings):
     APP_NAME: str = "StackSentry Technologies"
     APP_URL: str = "http://localhost:8000"
     ENVIRONMENT: str = "development"
+    FRONTEND_URL: str = "http://localhost:5173"
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/stacksentry"
 
     # Security
-    SECRET_KEY: str = secrets.token_urlsafe(64)
-    REFRESH_SECRET_KEY: str = secrets.token_urlsafe(64)
+    SECRET_KEY: str
+    REFRESH_SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 

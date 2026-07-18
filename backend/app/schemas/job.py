@@ -15,8 +15,8 @@ class JobCreate(BaseModel):
     salary_min: Optional[int] = Field(None, ge=0)
     salary_max: Optional[int] = Field(None, ge=0)
     salary_currency: str = "INR"
-    job_type: str = "full_time"
-    experience_level: str = "entry"
+    job_type: str = Field("full_time", pattern=r"^(full_time|part_time|contract|internship)$")
+    experience_level: str = Field("entry", pattern=r"^(entry|mid|senior|lead)$")
     location: Optional[str] = None
     is_remote: bool = False
     department: Optional[str] = None
@@ -34,8 +34,8 @@ class JobUpdate(BaseModel):
     salary_min: Optional[int] = Field(None, ge=0)
     salary_max: Optional[int] = Field(None, ge=0)
     salary_currency: Optional[str] = None
-    job_type: Optional[str] = None
-    experience_level: Optional[str] = None
+    job_type: Optional[str] = Field(None, pattern=r"^(full_time|part_time|contract|internship)$")
+    experience_level: Optional[str] = Field(None, pattern=r"^(entry|mid|senior|lead)$")
     location: Optional[str] = None
     is_remote: Optional[bool] = None
     department: Optional[str] = None

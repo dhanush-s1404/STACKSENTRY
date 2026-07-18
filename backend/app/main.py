@@ -10,6 +10,7 @@ from app.config import settings
 from app.database import engine, async_session_factory, Base
 from app.api.v1.router import api_router
 from app.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
+from slowapi.middleware import SlowAPIMiddleware
 from app.middleware.audit import AuditMiddleware
 from app.seeds.admin import seed_admin_user
 from app.seeds.jobs import seed_jobs
@@ -49,9 +50,13 @@ app = FastAPI(
 )
 
 # CORS
+cors_origins = list(settings.CORS_ORIGINS)
+if settings.FRONTEND_URL and settings.FRONTEND_URL not in cors_origins:
+    cors_origins.append(settings.FRONTEND_URL)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,6 +68,7 @@ app.add_middleware(AuditMiddleware)
 # Rate limiting
 app.state.limiter = limiter
 app.add_exception_handler(429, rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # Include API router
 app.include_router(api_router)

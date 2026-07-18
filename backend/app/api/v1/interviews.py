@@ -152,6 +152,23 @@ async def get_calendar(
     return [_format_interview_response(iv) for iv in interviews]
 
 
+@router.get("/{interview_id}", response_model=InterviewResponse)
+async def get_interview(
+    interview_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get interview details by ID."""
+    interview = await InterviewService.get_interview(db, interview_id)
+    if not interview:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Interview not found",
+        )
+
+    return _format_interview_response(interview)
+
+
 @router.put("/{interview_id}", response_model=InterviewResponse)
 async def update_interview(
     interview_id: UUID,

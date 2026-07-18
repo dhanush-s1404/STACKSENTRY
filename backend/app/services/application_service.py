@@ -81,8 +81,6 @@ class ApplicationService:
         )
         db.add(status_history)
 
-        job.positions_filled += 1
-
         await db.flush()
         return application
 
@@ -173,6 +171,15 @@ class ApplicationService:
             application.rejection_reason = notes
         elif new_status in ("interview_scheduled", "interview_completed", "shortlisted"):
             application.hr_notes = notes
+
+        if new_status == "hired":
+            job = await db.get(Job, application.job_id)
+            if job:
+                job.positions_filled += 1
+        elif old_status == "hired" and new_status != "hired":
+            job = await db.get(Job, application.job_id)
+            if job and job.positions_filled > 0:
+                job.positions_filled -= 1
 
         status_history = ApplicationStatusHistory(
             application_id=application_id,

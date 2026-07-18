@@ -39,11 +39,13 @@ def create_refresh_token(data: dict) -> str:
 
 
 def verify_token(token: str) -> Optional[dict]:
-    """Verify and decode a JWT token."""
+    """Verify and decode a JWT access token."""
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=["HS256"]
         )
+        if payload.get("type") != "access":
+            return None
         return payload
     except JWTError:
         return None
@@ -55,6 +57,8 @@ def verify_refresh_token(token: str) -> Optional[dict]:
         payload = jwt.decode(
             token, settings.REFRESH_SECRET_KEY, algorithms=["HS256"]
         )
+        if payload.get("type") != "refresh":
+            return None
         return payload
     except JWTError:
         return None

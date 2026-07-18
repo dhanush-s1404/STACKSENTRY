@@ -10,7 +10,7 @@ class ApplicationCreate(BaseModel):
     job_id: UUID
     cover_letter: Optional[str] = Field(None, max_length=5000)
     expected_salary: Optional[str] = Field(None, max_length=50)
-    preferred_work_mode: Optional[str] = None
+    preferred_work_mode: Optional[str] = Field(None, pattern=r"^(remote|hybrid|onsite)$")
 
 
 class ApplicationResponse(BaseModel):
@@ -37,7 +37,7 @@ class ApplicationResponse(BaseModel):
 
 class ApplicationStatusUpdate(BaseModel):
     """Schema for updating application status."""
-    status: str
+    status: str = Field(..., pattern=r"^(applied|under_review|shortlisted|interview_scheduled|interview_completed|offer_sent|hired|rejected|withdrawn)$")
     notes: Optional[str] = Field(None, max_length=2000)
 
 
