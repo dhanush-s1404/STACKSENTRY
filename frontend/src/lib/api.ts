@@ -48,25 +48,25 @@ const api = axios.create({
 
 
 api.interceptors.request.use((config) => {
-
   const token = useAuthStore.getState().token;
 
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  if (
+    config.data &&
+    typeof config.data === "object" &&
+    !(config.data instanceof FormData)
+  ) {
+    config.data = convertKeys(
+      config.data,
+      toSnakeCase
+    );
+  }
 
-if (
-  config.data &&
-  typeof config.data === "object" &&
-  !(config.data instanceof FormData)
-) {
-  config.data = convertKeys(
-    config.data,
-    toSnakeCase
-  );
-}
-
+  return config;
+});
 
 api.interceptors.response.use(
 
