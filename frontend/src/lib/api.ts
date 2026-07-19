@@ -56,20 +56,16 @@ api.interceptors.request.use((config) => {
   }
 
 
-  if (
-    config.data &&
-    typeof config.data === "object"
-  ) {
-    config.data = convertKeys(
-      config.data,
-      toSnakeCase
-    );
-  }
-
-
-  return config;
-});
-
+if (
+  config.data &&
+  typeof config.data === "object" &&
+  !(config.data instanceof FormData)
+) {
+  config.data = convertKeys(
+    config.data,
+    toSnakeCase
+  );
+}
 
 
 api.interceptors.response.use(

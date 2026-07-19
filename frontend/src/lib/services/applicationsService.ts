@@ -32,9 +32,12 @@ export async function createApplication(data: {
 export async function uploadApplicationResume(file: File) {
   const formData = new FormData();
   formData.append("file", file);
-  const res = await api.post<{ id: string; filename: string }>("/files/upload?upload_type=resume", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+
+  const res = await api.post<{ id: string; filename: string }>(
+    "/files/upload?upload_type=resume",
+    formData
+  );
+
   return res.data;
 }
 
